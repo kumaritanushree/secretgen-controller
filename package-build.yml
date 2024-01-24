@@ -21,7 +21,7 @@ spec:
               - .imgpkg/images.yml
       export:
       - imgpkgBundle:
-          image: docker.io/ktanushree/secretgen-controller-package-bundle
+          image: ghcr.io/kumaritanushree/secretgen-controller-package-bundle
           useKbldImagesLock: false
         includePaths:
         - config/package-bundle/config

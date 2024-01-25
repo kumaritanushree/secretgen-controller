@@ -81,8 +81,8 @@ jobs:
       - name: Updating release notes
         run: |
           RELEASE_TAG=$(git describe --tags --abbrev=0)
-          KAPP_CONTROLLER_IMAGE=$(yq e '.spec.template.spec.containers[] | select(.name == "secretgen-controller") | .image' release/release.yml)
-          KAPP_CONTROLLER_PACKAGE_BUNDLE_IMAGE=$(yq e '.spec.template.spec.fetch[0].imgpkgBundle.image' release/package.yml)
+          SGC_CONTROLLER_IMAGE=$(yq e '.spec.template.spec.containers[] | select(.name == "secretgen-controller") | .image' release/release.yml)
+          SGC_CONTROLLER_PACKAGE_BUNDLE_IMAGE=$(yq e '.spec.template.spec.fetch[0].imgpkgBundle.image' release/package.yml)
           RELEASE_NOTES="
           <details>
           <summary><h2>Installation and signature verification</h2></summary>
@@ -125,21 +125,21 @@ jobs:
 
           ### OCI Image URLs
 
-          - $KAPP_CONTROLLER_IMAGE
-          - $KAPP_CONTROLLER_PACKAGE_BUNDLE_IMAGE
+          - $SGC_CONTROLLER_IMAGE
+          - $SGC_CONTROLLER_PACKAGE_BUNDLE_IMAGE
 
           ### Verify container image signature
 
           The container images are signed using [Cosign](https://docs.sigstore.dev/cosign/overview/) with GitHub OIDC. To validate the signature of OCI images, run the following commands:
           \`\`\`shell
           # Verifying secretgen-controller image
-          cosign verify $KAPP_CONTROLLER_IMAGE \
+          cosign verify $SGC_CONTROLLER_IMAGE \
           --certificate-identity-regexp=https://github.com/${{ github.repository_owner }} \
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
           -o text
 
           # Verifying secretgen-controller-package-bundle image
-          cosign verify $KAPP_CONTROLLER_PACKAGE_BUNDLE_IMAGE \
+          cosign verify $SGC_CONTROLLER_PACKAGE_BUNDLE_IMAGE \
           --certificate-identity-regexp=https://github.com/${{ github.repository_owner }} \
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
           -o text

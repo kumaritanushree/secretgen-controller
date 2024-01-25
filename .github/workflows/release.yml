@@ -86,31 +86,19 @@ jobs:
           RELEASE_NOTES="
           <details>
           <summary><h2>Installation and signature verification</h2></summary>
-          ## Installation of kctrl
-          #### By downloading binary from the release
-          For instance, if you are using Linux on an AMD64 architecture:
-          \`\`\`shell
-          # Download the binary
-          curl -LO https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/releases/download/$RELEASE_TAG/kctrl-linux-amd64
-          # Move the binary in to your PATH
-          mv kctrl-linux-amd64 /usr/local/bin/kctrl
-          # Make the binary executable
-          chmod +x /usr/local/bin/kctrl
-          \`\`\`
-          #### Via Homebrew (macOS or Linux)
-          \`\`\`shell
-          $ brew tap carvel-dev/carvel
-          $ brew install kctrl
-          $ kctrl version
-          \`\`\`
+          
           ## Verify checksums file signature
+
           Install cosign on your system https://docs.sigstore.dev/system_config/installation/
+
           The checksums file provided within the artifacts attached to this release is signed using [Cosign](https://docs.sigstore.dev/cosign/overview/) with GitHub OIDC. To validate the signature of this file, run the following commands:
+
           \`\`\`shell
           # Download the checksums file, certificate, and signature
           curl -LO https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/releases/download/$RELEASE_TAG/checksums.txt
           curl -LO https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/releases/download/$RELEASE_TAG/checksums.txt.pem
           curl -LO https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/releases/download/$RELEASE_TAG/checksums.txt.sig
+
           ### Verify the checksums file
           cosign verify-blob checksums.txt \
           --certificate checksums.txt.pem \
@@ -118,27 +106,30 @@ jobs:
           --certificate-identity-regexp=https://github.com/${{ github.repository_owner }} \
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com 
           \`\`\`
-          ### Verify binary integrity
-          To verify the integrity of the downloaded binary, you can utilize the checksums file after having validated its signature. For instance, if you are using Linux on an AMD64 architecture:
-          \`\`\`shell
-          # Verify the binary using the checksums file
-          sha256sum -c checksums.txt --ignore-missing
-          \`\`\`
+
           ## Installation of secretgen-controller
+
           secretgen-controller can be installed by using kapp 
           \`\`\`shell
           kapp deploy -a kc -f https://github.com/carvel-dev/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
           \`\`\`
+
           or by using kubectl
           \`\`\`shell
           kubectl deploy -f https://github.com/carvel-dev/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
           \`\`\`
+
           ### Container Images
+
           secretgen-controller and secretgen-controller-package-bundle images are available in Github Container Registry.
+
           ### OCI Image URLs
+
           - $KAPP_CONTROLLER_IMAGE
           - $KAPP_CONTROLLER_PACKAGE_BUNDLE_IMAGE
+
           ### Verify container image signature
+
           The container images are signed using [Cosign](https://docs.sigstore.dev/cosign/overview/) with GitHub OIDC. To validate the signature of OCI images, run the following commands:
           \`\`\`shell
           # Verifying secretgen-controller image
@@ -146,12 +137,14 @@ jobs:
           --certificate-identity-regexp=https://github.com/${{ github.repository_owner }} \
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
           -o text
+
           # Verifying secretgen-controller-package-bundle image
           cosign verify $KAPP_CONTROLLER_PACKAGE_BUNDLE_IMAGE \
           --certificate-identity-regexp=https://github.com/${{ github.repository_owner }} \
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
           -o text
           \`\`\`
+          
           </summary>
           </details>
           "

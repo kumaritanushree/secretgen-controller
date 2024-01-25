@@ -156,6 +156,7 @@ jobs:
           shasum -a 256 ./release.yml ./package.yml ./package-metadata.yml | tee ../tmp/checksums.txt
           popd
           cat ./tmp/checksums.txt | tee -a ./tmp/release_notes.txt
+          cp ./tmp/checksums.txt release/checksums.txt
         
       - name: Sign checksums.txt
         run: |
